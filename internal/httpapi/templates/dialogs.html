@@ -1,0 +1,39 @@
+{{define "dialogs.html"}}
+<dialog id="transaction-dialog" class="app-dialog">
+  <form id="transaction-form" class="dialog-form">
+    <div class="dialog-heading"><div><span class="eyebrow">MONEY IN, MONEY OUT</span><h2 id="transaction-dialog-title">Add a transaction</h2></div><button class="dialog-close" type="button" data-close-dialog aria-label="Close">×</button></div>
+    <div class="form-grid">
+      <label>Type<select name="kind" required><option value="expense">Expense</option><option value="income">Income</option></select></label>
+      <label>Amount<input name="amount" type="number" min="0.01" step="0.01" placeholder="0.00" required></label>
+      <label>Currency<input name="currency" value="USD" minlength="3" maxlength="3" required></label>
+      <label>Date<input name="occurred_on" type="date" required></label>
+      <label class="form-span">Category<select name="category_id" id="transaction-category"><option value="">Uncategorized</option></select></label>
+      <button class="text-button category-add-button" type="button" data-action="new-category">＋ Add a category</button>
+      <label class="form-span">Description<input name="description" maxlength="500" placeholder="What was it for?"></label>
+    </div>
+    <p id="transaction-error" class="form-error" role="alert"></p>
+    <div class="dialog-actions"><button class="button button-secondary" type="button" data-close-dialog>Cancel</button><button class="button button-primary" type="submit">Save transaction</button></div>
+  </form>
+</dialog>
+<dialog id="budget-dialog" class="app-dialog">
+  <form id="budget-form" class="dialog-form">
+    <div class="dialog-heading"><div><span class="eyebrow">PLAN AHEAD</span><h2>Create a budget</h2></div><button class="dialog-close" type="button" data-close-dialog aria-label="Close">×</button></div>
+    <div class="form-grid">
+      <label>Monthly limit<input name="amount" type="number" min="0.01" step="0.01" placeholder="0.00" required></label>
+      <label>Month<input name="month" type="month" required></label>
+      <label>Currency<input name="currency" value="USD" minlength="3" maxlength="3" required></label>
+      <label>Category<select name="category_id" id="budget-category"><option value="">All categories</option></select></label>
+    </div>
+    <p id="budget-error" class="form-error" role="alert"></p>
+    <div class="dialog-actions"><button class="button button-secondary" type="button" data-close-dialog>Cancel</button><button class="button button-primary" type="submit">Save budget</button></div>
+  </form>
+</dialog>
+<dialog id="category-dialog" class="app-dialog">
+  <form id="category-form" class="dialog-form">
+    <div class="dialog-heading"><div><span class="eyebrow">KEEP IT ORGANIZED</span><h2>Add a category</h2></div><button class="dialog-close" type="button" data-close-dialog aria-label="Close">×</button></div>
+    <label>Category name<input name="name" maxlength="60" placeholder="e.g. Groceries" required></label>
+    <p id="category-error" class="form-error" role="alert"></p>
+    <div class="dialog-actions"><button class="button button-secondary" type="button" data-close-dialog>Cancel</button><button class="button button-primary" type="submit">Save category</button></div>
+  </form>
+</dialog>
+{{end}}

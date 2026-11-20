@@ -1,0 +1,15 @@
+{{define "transactions.html"}}
+<section id="transactions-page" class="page-panel hidden">
+  <article class="panel full-panel">
+    <div class="panel-heading list-heading"><div><h2>All transactions</h2><p>Search your recent income and expenses.</p></div><button class="button button-primary button-small" data-action="new-transaction">＋ Add transaction</button></div>
+    <div class="filter-row">
+      <label class="filter-control"><span>Type</span><select id="filter-kind"><option value="">All transactions</option><option value="income">Income</option><option value="expense">Expenses</option></select></label>
+      <label class="filter-control"><span>From</span><input id="filter-start" type="date"></label>
+      <label class="filter-control"><span>To</span><input id="filter-end" type="date"></label>
+      <button id="apply-filters" class="button button-secondary button-small">Apply filters</button>
+    </div>
+    <div id="all-transactions" class="transaction-list"></div>
+    <div class="pagination"><button id="previous-page" class="button button-secondary button-small">← Previous</button><span id="page-status">Page 1</span><button id="next-page" class="button button-secondary button-small">Next →</button></div>
+  </article>
+</section>
+{{end}}

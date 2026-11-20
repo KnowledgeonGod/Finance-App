@@ -1,0 +1,11 @@
+{{define "reports.html"}}
+<section id="reports-page" class="page-panel hidden">
+  <div class="section-title-row"><div><h2>Monthly report</h2><p>A simple snapshot of income and expenses.</p></div></div>
+  <div class="report-cards">
+    <article class="summary-card report-income"><span class="card-label">Total income</span><strong id="report-income-total" class="summary-value">—</strong><span id="report-income-count" class="card-foot">This month</span></article>
+    <article class="summary-card report-expense"><span class="card-label">Total expenses</span><strong id="report-expense-total" class="summary-value">—</strong><span id="report-expense-count" class="card-foot">This month</span></article>
+    <article class="summary-card"><span class="card-label">Net cash flow</span><strong id="report-net-total" class="summary-value">—</strong><span class="card-foot">Income minus expenses</span></article>
+  </div>
+  <article class="panel report-panel"><div class="panel-heading"><div><h2>Month at a glance</h2><p id="report-month-label">Selected month</p></div></div><div id="report-chart" class="report-chart"></div></article>
+</section>
+{{end}}

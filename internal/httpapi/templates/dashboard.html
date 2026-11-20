@@ -1,0 +1,42 @@
+{{define "dashboard.html"}}
+<div id="app-view" class="app-shell hidden">
+  <aside id="sidebar" class="sidebar">
+    <a class="brand" href="#" data-page="overview"><span class="brand-mark">L</span><span>ledgerly</span></a>
+    <div class="workspace-label">WORKSPACE</div>
+    <nav class="main-nav" aria-label="Main navigation">
+      <button class="nav-link active" data-page="overview"><span class="nav-icon">⌂</span>Overview</button>
+      <button class="nav-link" data-page="transactions"><span class="nav-icon">↕</span>Transactions</button>
+      <button class="nav-link" data-page="budgets"><span class="nav-icon">◷</span>Budgets</button>
+      <button class="nav-link" data-page="reports"><span class="nav-icon">▥</span>Reports</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-tip"><span class="tip-spark">✳</span><strong>Good money habits</strong><p>A little awareness today goes a long way tomorrow.</p></div>
+      <button id="logout-button" class="profile-button" aria-label="Log out of Ledgerly" title="Log out">
+        <span class="profile-avatar">Y</span>
+        <span class="profile-info"><strong>Log out</strong><small>End this session</small></span>
+        <span class="profile-more" aria-hidden="true">↪</span>
+      </button>
+    </div>
+  </aside>
+  <div id="sidebar-scrim" class="sidebar-scrim"></div>
+  <section class="main-column">
+    <header class="topbar">
+      <button id="menu-button" class="icon-button menu-button" aria-label="Open navigation" aria-expanded="false">☰</button>
+      <div class="breadcrumb"><span>Workspace</span><span class="crumb-separator">/</span><strong id="page-breadcrumb">Overview</strong></div>
+      <div class="topbar-actions"><span id="today-label" class="today-label"></span><button class="button button-primary button-small" data-action="new-transaction"><span>＋</span> Add transaction</button></div>
+    </header>
+    <main class="page-content">
+      <section class="page-heading">
+        <div><span class="eyebrow" id="greeting-label">YOUR FINANCES, AT A GLANCE</span><h1 id="page-title">Good to see you.</h1><p id="page-subtitle">Here’s what’s happening with your money this month.</p></div>
+        <label class="month-picker"><span>◷</span><input id="month-picker" type="month" aria-label="Choose month"></label>
+      </section>
+      <div id="notice" class="notice hidden" role="status"></div>
+      {{template "overview.html" .}}
+      {{template "transactions.html" .}}
+      {{template "budgets.html" .}}
+      {{template "reports.html" .}}
+    </main>
+  </section>
+</div>
+<div id="toast" class="toast hidden" role="status"></div>
+{{end}}

@@ -1,0 +1,38 @@
+{{define "overview.html"}}
+<section id="overview-page" class="page-panel">
+  <div class="summary-grid">
+    <article class="summary-card balance-card">
+      <div class="card-topline"><span class="card-label">Net this month</span><span class="summary-icon icon-green">↗</span></div>
+      <strong id="net-total" class="summary-value">—</strong>
+      <div class="card-foot"><span class="trend-dot"></span><span id="net-caption">Income minus expenses</span></div>
+      <div class="balance-decoration"></div>
+    </article>
+    <article class="summary-card">
+      <div class="card-topline"><span class="card-label">Income</span><span class="summary-icon icon-mint">↙</span></div>
+      <strong id="income-total" class="summary-value">—</strong>
+      <div class="card-foot"><span id="income-count">0 transactions</span><span class="foot-arrow">↗</span></div>
+    </article>
+    <article class="summary-card">
+      <div class="card-topline"><span class="card-label">Expenses</span><span class="summary-icon icon-peach">↗</span></div>
+      <strong id="expense-total" class="summary-value">—</strong>
+      <div class="card-foot"><span id="expense-count">0 transactions</span><span class="foot-arrow">↗</span></div>
+    </article>
+  </div>
+  <div class="content-grid">
+    <article class="panel spending-panel">
+      <div class="panel-heading"><div><h2>Cash flow</h2><p id="cashflow-caption">Income and expenses this month</p></div><span class="chart-legend"><i></i>Income <i class="legend-expense"></i>Expenses</span></div>
+      <div id="cashflow-chart" class="chart-wrap"></div>
+      <div class="chart-axis"><span>INCOME</span><span>EXPENSES</span></div>
+    </article>
+    <article class="panel budgets-panel">
+      <div class="panel-heading"><div><h2>Budget check-in</h2><p>Your monthly spending limits</p></div><button class="subtle-link" data-page="budgets">See all <span>↗</span></button></div>
+      <div id="budget-preview" class="budget-list"><div class="empty-state">No budgets for this month yet.</div></div>
+      <button class="button button-secondary button-wide" data-action="new-budget">＋ Create a budget</button>
+    </article>
+  </div>
+  <article class="panel transactions-panel">
+    <div class="panel-heading"><div><h2>Recent transactions</h2><p>Your latest money movements</p></div><button class="subtle-link" data-page="transactions">View all <span>↗</span></button></div>
+    <div id="recent-transactions" class="transaction-list"></div>
+  </article>
+</section>
+{{end}}
