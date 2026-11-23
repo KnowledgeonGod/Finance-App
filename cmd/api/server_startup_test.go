@@ -15,7 +15,8 @@ import (
 func clearAPIConfig(t *testing.T) {
 	t.Helper()
 	for _, key := range []string{
-		"APP_ENV", "HTTP_ADDR", "DATABASE_URL", "RATE_LIMIT_REDIS_URL",
+		"APP_ENV", "HTTP_ADDR", "DATABASE_URL", "PUBLIC_BASE_URL", "RATE_LIMIT_REDIS_URL",
+		"BREVO_API_KEY", "MAIL_FROM",
 		"DB_MAX_CONNS", "DB_MIN_CONNS", "DB_CONNECT_TIMEOUT", "DB_STATEMENT_TIMEOUT",
 	} {
 		t.Setenv(key, "")

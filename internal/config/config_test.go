@@ -10,7 +10,7 @@ func clearConfigEnv(t *testing.T) {
 	t.Helper()
 	for _, key := range []string{
 		"APP_ENV", "HTTP_ADDR", "DATABASE_URL", "PUBLIC_BASE_URL", "RATE_LIMIT_REDIS_URL",
-		"SMTP_HOST", "SMTP_PORT", "SMTP_USERNAME", "SMTP_PASSWORD", "SMTP_FROM",
+		"BREVO_API_KEY", "MAIL_FROM",
 		"DB_MAX_CONNS", "DB_MIN_CONNS", "DB_CONNECT_TIMEOUT", "DB_STATEMENT_TIMEOUT",
 	} {
 		t.Setenv(key, "")
@@ -79,11 +79,8 @@ func TestProductionRequiresTLSRedisURL(t *testing.T) {
 	t.Setenv("APP_ENV", "production")
 	t.Setenv("DATABASE_URL", "postgres://localhost/finance?sslmode=verify-full")
 	t.Setenv("PUBLIC_BASE_URL", "https://finance.example.com")
-	t.Setenv("SMTP_HOST", "smtp.example.com")
-	t.Setenv("SMTP_PORT", "587")
-	t.Setenv("SMTP_USERNAME", "mailer")
-	t.Setenv("SMTP_PASSWORD", "secret")
-	t.Setenv("SMTP_FROM", "finance@example.com")
+	t.Setenv("BREVO_API_KEY", "test-api-key")
+	t.Setenv("MAIL_FROM", "finance@example.com")
 	cfg, err := Load()
 	if err != nil {
 		t.Fatalf("Load: %v", err)
@@ -101,40 +98,38 @@ func TestProductionRequiresTLSRedisURL(t *testing.T) {
 	if err := cfg.ValidateAPI(); err != nil {
 		t.Fatalf("ValidateAPI rejected TLS Redis URL: %v", err)
 	}
-	cfg.SMTPPassword = ""
+	cfg.BrevoAPIKey = ""
 	if err := cfg.ValidateAPI(); err == nil {
-		t.Fatal("ValidateAPI accepted production without SMTP credentials")
+		t.Fatal("ValidateAPI accepted production without Brevo credentials")
 	}
-	cfg.SMTPPassword = "secret"
+	cfg.BrevoAPIKey = "test-api-key"
 	cfg.PublicBaseURL = "http://finance.example.com"
 	if err := cfg.ValidateAPI(); err == nil {
 		t.Fatal("ValidateAPI accepted a non-TLS public URL in production")
 	}
 }
 
-func TestLoadValidatesOptionalSMTPSettings(t *testing.T) {
+func TestLoadValidatesOptionalBrevoSettings(t *testing.T) {
 	clearConfigEnv(t)
 	t.Setenv("DATABASE_URL", "postgres://localhost/finance")
-	t.Setenv("SMTP_HOST", "smtp.example.com")
-	t.Setenv("SMTP_USERNAME", "mailer")
-	t.Setenv("SMTP_PASSWORD", "secret")
-	t.Setenv("SMTP_FROM", "finance@example.com")
+	t.Setenv("BREVO_API_KEY", "test-api-key")
+	t.Setenv("MAIL_FROM", "Finance <finance@example.com>")
 	cfg, err := Load()
 	if err != nil {
-		t.Fatalf("Load with complete SMTP settings: %v", err)
+		t.Fatalf("Load with complete Brevo settings: %v", err)
 	}
-	if cfg.SMTPPort != 587 {
-		t.Fatalf("SMTP port = %d, want default 587", cfg.SMTPPort)
+	if cfg.BrevoAPIKey != "test-api-key" || cfg.MailFrom != "Finance <finance@example.com>" {
+		t.Fatalf("Brevo settings were not loaded: %+v", cfg)
 	}
 
-	t.Setenv("SMTP_PORT", "70000")
+	t.Setenv("BREVO_API_KEY", "")
 	if _, err := Load(); err == nil {
-		t.Fatal("Load accepted an out-of-range SMTP port")
+		t.Fatal("Load accepted an API key without a sender address")
 	}
-	t.Setenv("SMTP_PORT", "587")
-	t.Setenv("SMTP_FROM", "invalid sender")
+	t.Setenv("BREVO_API_KEY", "test-api-key")
+	t.Setenv("MAIL_FROM", "invalid sender")
 	if _, err := Load(); err == nil {
-		t.Fatal("Load accepted an invalid SMTP sender address")
+		t.Fatal("Load accepted an invalid mail sender address")
 	}
 }
 

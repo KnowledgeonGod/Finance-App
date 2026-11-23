@@ -585,7 +585,7 @@ func TestPasswordResetRequestReportsDevelopmentMailDeliveryFailure(t *testing.T)
 	pool.ExpectCommit()
 	pool.ExpectRollback()
 
-	mailer := &recordingPasswordResetMailer{err: errors.New("SMTP authentication rejected")}
+	mailer := &recordingPasswordResetMailer{err: errors.New("Brevo API rejected request")}
 	server := &Server{
 		db:               pool,
 		logger:           slog.New(slog.NewTextHandler(io.Discard, nil)),

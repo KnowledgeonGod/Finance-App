@@ -19,11 +19,8 @@ type Config struct {
 	DatabaseURL        string
 	PublicBaseURL      string
 	RedisURL           string
-	SMTPHost           string
-	SMTPPort           int
-	SMTPUsername       string
-	SMTPPassword       string
-	SMTPFrom           string
+	BrevoAPIKey        string
+	MailFrom           string
 	DBMaxConns         int32
 	DBMinConns         int32
 	DBConnectTimeout   time.Duration
@@ -45,10 +42,8 @@ func Load() (Config, error) {
 		DatabaseURL:        strings.TrimSpace(os.Getenv("DATABASE_URL")),
 		PublicBaseURL:      env("PUBLIC_BASE_URL", "http://localhost:8080"),
 		RedisURL:           strings.TrimSpace(os.Getenv("RATE_LIMIT_REDIS_URL")),
-		SMTPHost:           strings.TrimSpace(os.Getenv("SMTP_HOST")),
-		SMTPUsername:       strings.TrimSpace(os.Getenv("SMTP_USERNAME")),
-		SMTPPassword:       os.Getenv("SMTP_PASSWORD"),
-		SMTPFrom:           strings.TrimSpace(os.Getenv("SMTP_FROM")),
+		BrevoAPIKey:        strings.TrimSpace(os.Getenv("BREVO_API_KEY")),
+		MailFrom:           strings.TrimSpace(os.Getenv("MAIL_FROM")),
 		DBMaxConns:         20,
 		DBMinConns:         2,
 		DBConnectTimeout:   5 * time.Second,
@@ -71,7 +66,7 @@ func Load() (Config, error) {
 	if err := validatePublicBaseURL(cfg.PublicBaseURL); err != nil {
 		return Config{}, err
 	}
-	if err := cfg.loadSMTPSettings(); err != nil {
+	if err := cfg.loadBrevoSettings(); err != nil {
 		return Config{}, err
 	}
 	if max, err := positiveInt32("DB_MAX_CONNS", "20"); err != nil {
@@ -115,37 +110,26 @@ func (c Config) ValidateAPI() error {
 	if err != nil || baseURL.Scheme != "https" {
 		return errors.New("PUBLIC_BASE_URL must use https:// in production")
 	}
-	if c.SMTPHost == "" || c.SMTPPort == 0 || c.SMTPUsername == "" ||
-		c.SMTPPassword == "" || c.SMTPFrom == "" {
-		return errors.New("SMTP_HOST, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD, and SMTP_FROM are required in production")
+	if c.BrevoAPIKey == "" || c.MailFrom == "" {
+		return errors.New("BREVO_API_KEY and MAIL_FROM are required in production")
 	}
 	return nil
 }
 
-func (c *Config) loadSMTPSettings() error {
-	portValue := strings.TrimSpace(os.Getenv("SMTP_PORT"))
-	configured := c.SMTPHost != "" || portValue != "" || c.SMTPUsername != "" ||
-		strings.TrimSpace(c.SMTPPassword) != "" || c.SMTPFrom != ""
+func (c *Config) loadBrevoSettings() error {
+	configured := c.BrevoAPIKey != "" || c.MailFrom != ""
 	if !configured {
 		return nil
 	}
-	if c.SMTPHost == "" || c.SMTPUsername == "" || c.SMTPPassword == "" || c.SMTPFrom == "" {
-		return errors.New("SMTP_HOST, SMTP_USERNAME, SMTP_PASSWORD, and SMTP_FROM must be configured together")
+	if c.BrevoAPIKey == "" || c.MailFrom == "" {
+		return errors.New("BREVO_API_KEY and MAIL_FROM must be configured together")
 	}
-	if portValue == "" {
-		portValue = "587"
+	if strings.ContainsAny(c.MailFrom, "\r\n") {
+		return errors.New("MAIL_FROM is invalid")
 	}
-	port, err := strconv.Atoi(portValue)
-	if err != nil || port < 1 || port > 65535 {
-		return errors.New("SMTP_PORT must be between 1 and 65535")
+	if _, err := mail.ParseAddress(c.MailFrom); err != nil {
+		return errors.New("MAIL_FROM is invalid")
 	}
-	if strings.ContainsAny(c.SMTPFrom, "\r\n") {
-		return errors.New("SMTP_FROM is invalid")
-	}
-	if _, err := mail.ParseAddress(c.SMTPFrom); err != nil {
-		return errors.New("SMTP_FROM is invalid")
-	}
-	c.SMTPPort = port
 	return nil
 }
 

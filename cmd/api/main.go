@@ -84,14 +84,8 @@ func run(logger *slog.Logger) error {
 		limiter = redisLimiter
 	}
 	var resetMailer httpapi.PasswordResetMailer
-	if cfg.SMTPHost != "" {
-		resetMailer, err = mailer.NewSMTP(
-			cfg.SMTPHost,
-			cfg.SMTPPort,
-			cfg.SMTPUsername,
-			cfg.SMTPPassword,
-			cfg.SMTPFrom,
-		)
+	if cfg.BrevoAPIKey != "" {
+		resetMailer, err = mailer.NewBrevo(cfg.BrevoAPIKey, cfg.MailFrom)
 		if err != nil {
 			return err
 		}

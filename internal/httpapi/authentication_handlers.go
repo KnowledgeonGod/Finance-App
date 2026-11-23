@@ -119,7 +119,7 @@ func (s *Server) requestPasswordReset(w http.ResponseWriter, r *http.Request) {
 		if err := s.resetMailer.SendPasswordReset(ctx, email, resetURL); err != nil {
 			s.logger.Error("send password reset email", "request_id", requestID(r), "error", err)
 			if s.developmentReset {
-				writeError(w, http.StatusBadGateway, "could not send the reset email; check SMTP settings and the API log")
+				writeError(w, http.StatusBadGateway, "could not send the reset email; check email provider settings and the API log")
 				return
 			}
 		}
@@ -271,7 +271,7 @@ func (s *Server) register(w http.ResponseWriter, r *http.Request) {
 				s.logger.Error("remove account after verification delivery failure",
 					"request_id", requestID(r), "error", cleanupErr)
 			}
-			writeError(w, http.StatusBadGateway, "could not send the verification email; check SMTP settings and try signing up again")
+			writeError(w, http.StatusBadGateway, "could not send the verification email; check email provider settings and try signing up again")
 			return
 		}
 	} else if s.developmentReset {
