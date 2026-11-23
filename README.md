@@ -67,7 +67,7 @@ CI runs tests, `go vet`, and a full build on pushes and pull requests. Before de
 
 All API routes are under `/api/v1`. Register or log in to receive a bearer token; send it as `Authorization: Bearer <access_token>`. Tokens are random, expire after 24 hours, and only their SHA-256 hashes are stored. Passwords are hashed with bcrypt.
 
-The root URL (`/`) serves a responsive browser dashboard built with HTML templates, CSS, JavaScript modules, and Tailwind utility classes. It supports account registration and login, password reset, logout, transaction creation/editing/deletion, categories, monthly budgets, alerts, reports, filtering, and pagination. The page and API share the same origin; the access token stays in tab-scoped `sessionStorage` and is cleared on logout or an expired session. Tailwind currently uses its CDN Play script for convenience; compile Tailwind to a local static stylesheet before a production deployment.
+The root URL (`/`) serves a responsive browser dashboard built with HTML templates, local CSS, and JavaScript modules. It supports account registration and login, password reset, logout, transaction creation/editing/deletion, categories, monthly budgets, alerts, reports, filtering, and pagination. The page and API share the same origin; the access token stays in tab-scoped `sessionStorage` and is cleared on logout or an expired session.
 
 | Method | Path | Purpose |
 |---|---|---|

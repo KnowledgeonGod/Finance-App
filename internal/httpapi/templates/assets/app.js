@@ -88,6 +88,16 @@ function showToast(message) {
   toastTimer = window.setTimeout(() => toast.classList.add("hidden"), 3000);
 }
 
+function replayAnimation(node, className) {
+  node.classList.remove(className);
+  void node.offsetWidth;
+  node.classList.add(className);
+}
+
+function animateAuthCopy() {
+  replayAnimation($(".auth-copy"), "auth-copy-enter");
+}
+
 function showAuth() {
   registering = false;
   resetToken = "";
@@ -128,6 +138,8 @@ function setAuthCopy() {
   confirmPassword.required = registering;
   authPassword.autocomplete = registering ? "new-password" : "current-password";
   authPassword.placeholder = registering ? "At least 8 characters" : "Your password";
+  animateAuthCopy();
+  replayAnimation(authForm, "auth-form-enter");
 }
 
 function showPasswordResetRequest() {
@@ -143,6 +155,7 @@ function showPasswordResetRequest() {
   $("#auth-note").classList.add("hidden");
   setText("#auth-title", "Reset your password.");
   setText("#auth-description", "Enter your email and we’ll send a one-time reset link.");
+  animateAuthCopy();
   setError("#reset-request-message");
 }
 
@@ -160,6 +173,7 @@ function showPasswordReset(token) {
   $("#auth-note").classList.add("hidden");
   setText("#auth-title", "Choose a new password.");
   setText("#auth-description", "Create a new password for your account.");
+  animateAuthCopy();
   setError("#reset-password-message");
   updatePasswordRules(resetPassword, "reset-password");
 }
